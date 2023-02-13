@@ -110,10 +110,6 @@ forward1(300);
 turn(-90);
 forward1(200);
 turn(90);
-forward1(1200);
-bear_search1(1400);
-turn(90);
-forward1(1);
 
 
 
