@@ -26,13 +26,13 @@ void buttons(){
 			bear_search_left_sensor(200);
 
 			}
-				if(getButtonPress(buttonDown)==1)//pokud se zmackne tlacitko nahoru zacne robot hledat medveda v rohu 
+				if(getButtonPress(buttonDown)==1)//pokud se zmackne tlacitko nahoru zacne robot hledat medveda v rohu
 				{
 				esko();
 
 
 				}
-					if(getButtonPress(buttonLeft)==1)//pokud se zmackne tlacitko nahoru zacne robot hledat medveda u zdi 
+					if(getButtonPress(buttonLeft)==1)//pokud se zmackne tlacitko nahoru zacne robot hledat medveda u zdi
 				{
 				esko();
 
@@ -116,7 +116,7 @@ forward1(10);
 turn(90);
 forward1(20);
 turn(-90);
-forward(800);//vzdalenost na zacatek prostoru s medvedem  
+forward(800);//vzdalenost na zacatek prostoru s medvedem
 }
 
 
