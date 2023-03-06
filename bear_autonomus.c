@@ -1,5 +1,6 @@
 #pragma config(Sensor, S1,     back,           sensorEV3_Touch, modeEV3Bump)
 #pragma config(Sensor, S2,     left,           sensorEV3_Ultrasonic)
+#pragma config(Sensor, S3,     frontIR,        sensorEV3_IRSensor)
 #pragma config(Motor,  motorA,          L_motor,       tmotorEV3_Large, PIDControl, reversed, encoder)
 #pragma config(Motor,  motorB,          L_klepeto,     tmotorEV3_Large, PIDControl, encoder)
 #pragma config(Motor,  motorC,          R_klepeto,     tmotorEV3_Large, PIDControl, encoder)
@@ -10,7 +11,8 @@ const float wheel_diameter = 140; //prumer kola
 const float wheel_base = 200; //rozvor kol
 const float speed = 20; //rychlost jizdy
 short average_left; //konstanata pro plovouci prumer
-
+int g_encoder;
+int g_sensor;
 
 //otevirani klepet
 void open_klepeto(short open_deg_R,short open_deg_L ){ //o kolik stupnu se otevre prave klepeto a o kolik leve
@@ -40,8 +42,8 @@ void close_klepeto(short close_deg_R,short close_deg_L){ //o kolik stupnu se zav
 void oblouk_right(short radius,){//polomer oblouku pro vnejsi kolo
 	resetMotorEncoder(L_motor);
 	resetMotorEncoder(R_motor);
-	moveMotorTarget(L_motor, (radius*PI)*360/(PI*wheel_diameter), speed);//vypocet delky oblouku pro kazde kolo
-	moveMotorTarget(R_motor, ((radius-wheel_base)*PI)*360/(PI*wheel_diameter), speed);//vypocet delky oblouku pro kazde kolo
+	moveMotorTarget(L_motor, (radius*PI)*360/(PI*wheel_diameter), (speed * (radius*PI)*360/(PI*wheel_diameter))/500);//vypocet delky oblouku pro kazde kolo
+	moveMotorTarget(R_motor, ((radius-wheel_base)*PI)*360/(PI*wheel_diameter), (speed*((radius-wheel_base)*PI)*360/(PI*wheel_diameter))/500);//vypocet delky oblouku pro kazde kolo
 	waitUntilMotorStop(L_motor);
 	waitUntilMotorStop(R_motor);
 	delay(10);
@@ -51,11 +53,12 @@ void oblouk_right(short radius,){//polomer oblouku pro vnejsi kolo
 void oblouk_left(short radius,){//polomer oblouku pro vnejsi kolo
 	resetMotorEncoder(L_motor);
 	resetMotorEncoder(R_motor);
-	moveMotorTarget(L_motor, 1000, speed);//vypocet delky oblouku pro kazde kolo
-	moveMotorTarget(R_motor, 800, speed);//vypocet delky oblouku pro kazde kolo
+	moveMotorTarget(L_motor,((radius-wheel_base)*PI)*360/(PI*wheel_diameter), (speed*((radius-wheel_base)*PI)*360/(PI*wheel_diameter))/500);//vypocet delky oblouku pro kazde kolo
+	moveMotorTarget(R_motor,(radius*PI)*360/(PI*wheel_diameter), (speed * (radius*PI)*360/(PI*wheel_diameter))/500);//vypocet delky oblouku pro kazde kolo
 	waitUntilMotorStop(L_motor);
 	waitUntilMotorStop(R_motor);
 	delay(10);
+
 }
 
 //otoceni robota doprava
@@ -161,13 +164,13 @@ void field_search(){
 void esko(){
 	button_back();
 	forward1(900);
-	turn_right(90,50);
+	turn_right(90,25);
 	forward1(400);
-	turn_right(90,50);
+	turn_right(90,25);
 	forward1(600);
-	turn_left(90,50);
+	turn_left(90,25);
 	forward1(480);
-	turn_left(90,50);
+	turn_left(90,25);
 	button_back();
 }
 
@@ -175,25 +178,28 @@ void esko(){
 void esko_back(){
 	button_back();
 	forward1(80);
-	turn_left(90,50);
+	turn_left(90,25);
 	forward1(500);
-	turn_right(90,50);
+	turn_right(90,25);
 	forward1(450);
-	turn_left(90,50);
+	turn_left(90,25);
 	forward1(450);
-	turn_left(90,50);
+	turn_left(90,25);
 	forward1(800);
 }
 
-//jizda pro medveda
+//jizda pro medveda  getIRDistance(S3) > 5 ||
 void go_for_bear(short lenght){
 	resetMotorEncoder(L_motor);
 	resetMotorEncoder(R_motor);
 	setMotorSpeed(R_motor, speed);
 	setMotorSpeed(L_motor, speed);
-	while(getIRDistance(S3) > 10 || getMotorEncoder(R_motor) < lenght*360/(PI*wheel_diameter)){
+
+	do{
+	g_encoder = getMotorEncoder(R_motor);
+	g_sensor =  getIRDistance(S3);
 	delay(1);
-	}
+	}while(g_sensor > 5 && g_encoder >= -500);
 	stopAllMotors();
 }
 
@@ -203,13 +209,13 @@ void buttons(){
 		if(getButtonPress(buttonUp)){ //pokud se zmackne tlacitko nahoru zacne robot hledat v pasu jedna
 			esko();
 			forward1(1500);
-			turn_left(90,50);
+			turn_left(90,25);
 			button_back();
 			open_klepeto(100,100);
-			go_for_bear(1200);
+			go_for_bear(120);
 			close_klepeto(55,55);
 			button_back();
-			turn_right(90,50);
+			turn_right(90,25);
 			esko_back();
 		}
 
@@ -227,15 +233,15 @@ void buttons(){
 		}
 
 		if(getButtonPress(buttonDown)){   //pokud se zmackne tlacitko nahoru zacne robot hledat medveda v pasu tri
-			esko();
-			forward1(2000);
-			turn_left(90,50);
-			button_back();
-			open_klepeto(100,100);
-			go_for_bear(1200);
+			//esko();
+			//forward1(2000);
+			//turn_left(90,25);
+			//button_back();
+			//open_klepeto(100,100);
+			go_for_bear(120);
 			close_klepeto(55,55);
 			button_back();
-			turn_right(90,50);
+			turn_right(90,25);
 			esko_back();
 		}
 
@@ -268,8 +274,5 @@ void buttons(){
 }
 
 task main(){
-	forward1(900);
-	oblouk_right(400);
-	oblouk_left(400);
 	buttons();
 }
