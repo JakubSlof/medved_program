@@ -1,6 +1,25 @@
 //g_distance2 > min_distance && g_distance2 < max_distance && g_distance2!=225
 const short max_distance=120;
 const short min_distance=100;
+int g_distance2;
+int g_distance;
+void bearserch(){
+	setMotorSpeed(motorL, speed);
+	setMotorSpeed(motorR, speed);
+	while(g_distance > 80 && g_distance<150){
+		g_distance = getUSDistance(S2);
+		displayBigTextLine(3, "vzdalenost: %.2f" , g_distance);
+				delay(1);
+		}
+stopAllMotors();
+
+
+		}
+
+
+
+
+
 
 
 
@@ -17,8 +36,7 @@ void bear_search_left_sensor(){//vzdalenost od robota ke zdi
 				distance8 = 0,
 				distance9 = 0,
 				distance10 = 0;
-	setMotorSpeed(motorL, speed+5);
-	setMotorSpeed(motorR, speed);
+
 			while(g_v_distance > 100 && g_v_distance<150){
 				distance1 = getUSDistance(S1);
 				delay(delayos);
@@ -63,14 +81,26 @@ void bear_search_left_sensor(){//vzdalenost od robota ke zdi
 
 
 void bear_search_front_sensor(){//vzdalenost od robota ke zdi
-	int g_distance2 = getUSDistance(S2);//predni senzor
-	setMotorSpeed(motorL, speed+5);
+	 g_distance2 = getUSDistance(S2);//predni senzor
+	setMotorSpeed(motorL, speed);
 	setMotorSpeed(motorR, speed);
-			while(g_distance2>50&& g_distance2 != 225){
+			while(g_distance2 > 8 && g_distance2 < 120){
 				g_distance2 = getUSDistance(S2);
 				displayBigTextLine(3, "vzdalenost: %.2f" , g_distance2);
 				delay(1);
 			}
 	stopAllMotors();
+	close_klepeto(45);
 
 }
+void search_wall_end(){//vzdalenost od robota ke zdi
+	 g_distance2 = getUSDistance(S2);//bocni senzor
+	setMotorSpeed(motorL, speed);
+	setMotorSpeed(motorR, speed);
+			while(g_distance2 < 50){
+				g_distance2 = getUSDistance(S2);
+				displayBigTextLine(3, "vzdalenost: %.2f" , g_distance2);
+				delay(1);
+			}
+		stopAllMotors();
+			}
