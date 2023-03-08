@@ -11,8 +11,8 @@ const float wheel_diameter = 140; //prumer kola
 const float wheel_base = 200; //rozvor kol
 const float speed = 20; //rychlost jizdy
 short average_left; //konstanata pro plovouci prumer
-int g_encoder;
-int g_sensor;
+int g_encoder;//promenne tady jen aby se vypisovaly 
+int g_sensor;//promenne tady jen aby se vypisovaly 
 
 //otevirani klepet
 void open_klepeto(short open_deg_R,short open_deg_L ){ //o kolik stupnu se otevre prave klepeto a o kolik leve
@@ -160,6 +160,15 @@ void field_search(){
 		stopAllMotors();
 }
 
+// projeti eska s oblouky 
+void esko_oblouk(){
+	button_back();
+	forward1(900);
+	oblouk_right(400);
+	oblouk_left(400);
+	button_back();
+}
+
 // projeti eska
 void esko(){
 	button_back();
@@ -188,18 +197,17 @@ void esko_back(){
 	forward1(800);
 }
 
-//jizda pro medveda  getIRDistance(S3) > 5 ||
-void go_for_bear(short lenght){
+//jizda pro medveda  
+void go_for_bear(short lenght){ //delka po ktere robot zastavi
 	resetMotorEncoder(L_motor);
 	resetMotorEncoder(R_motor);
 	setMotorSpeed(R_motor, speed);
 	setMotorSpeed(L_motor, speed);
-
 	do{
 	g_encoder = getMotorEncoder(R_motor);
 	g_sensor =  getIRDistance(S3);
 	delay(1);
-	}while(g_sensor > 5 && g_encoder >= -500);
+	}while(g_sensor > 5 && g_encoder >= - (lenght*360/(PI*wheel_diameter)));
 	stopAllMotors();
 }
 
@@ -212,7 +220,7 @@ void buttons(){
 			turn_left(90,25);
 			button_back();
 			open_klepeto(100,100);
-			go_for_bear(120);
+			go_for_bear(1200);
 			close_klepeto(55,55);
 			button_back();
 			turn_right(90,25);
