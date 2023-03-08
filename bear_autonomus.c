@@ -39,22 +39,22 @@ void close_klepeto(short close_deg_R,short close_deg_L){ //o kolik stupnu se zav
 }
 
 //oblouk doprava
-void oblouk_right(short radius,){//polomer oblouku pro vnejsi kolo
+void oblouk_right(short radius){//polomer oblouku pro vnejsi kolo
 	resetMotorEncoder(L_motor);
 	resetMotorEncoder(R_motor);
-	moveMotorTarget(L_motor, (radius*PI)*360/(PI*wheel_diameter), (speed * (radius*PI)*360/(PI*wheel_diameter))/500);//vypocet delky oblouku pro kazde kolo
-	moveMotorTarget(R_motor, ((radius-wheel_base)*PI)*360/(PI*wheel_diameter), (speed*((radius-wheel_base)*PI)*360/(PI*wheel_diameter))/500);//vypocet delky oblouku pro kazde kolo
+	moveMotorTarget(L_motor, (radius*PI)*360/(PI*wheel_diameter), speed);//vypocet delky oblouku pro kazde kolo
+	moveMotorTarget(R_motor, ((radius-wheel_base)*PI)*360/(PI*wheel_diameter), (speed*(radius-wheel_base))/radius);//vypocet delky oblouku pro kazde kolo
 	waitUntilMotorStop(L_motor);
 	waitUntilMotorStop(R_motor);
 	delay(10);
 }
 
 //oblouk doleva
-void oblouk_left(short radius,){//polomer oblouku pro vnejsi kolo
+void oblouk_left(short radius){//polomer oblouku pro vnejsi kolo
 	resetMotorEncoder(L_motor);
 	resetMotorEncoder(R_motor);
-	moveMotorTarget(L_motor,((radius-wheel_base)*PI)*360/(PI*wheel_diameter), (speed*((radius-wheel_base)*PI)*360/(PI*wheel_diameter))/500);//vypocet delky oblouku pro kazde kolo
-	moveMotorTarget(R_motor,(radius*PI)*360/(PI*wheel_diameter), (speed * (radius*PI)*360/(PI*wheel_diameter))/500);//vypocet delky oblouku pro kazde kolo
+	moveMotorTarget(L_motor,( (radius-wheel_base)*PI)*360/(PI*wheel_diameter), (speed*(radius-wheel_base))/radius);//vypocet delky oblouku pro kazde kolo
+	moveMotorTarget(R_motor,(radius*PI)*360/(PI*wheel_diameter), speed );//vypocet delky oblouku pro kazde kolo
 	waitUntilMotorStop(L_motor);
 	waitUntilMotorStop(R_motor);
 	delay(10);
