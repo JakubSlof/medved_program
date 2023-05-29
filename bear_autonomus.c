@@ -11,7 +11,7 @@ const float wheel_base = 148; //rozvor kol
 const float speed = 50; //rychlost jizdy
 short average_left; //konstanata pro plovouci prumer
 int g_encoder;//promenne tady jen aby se vypisovaly
-int g_sensor;//promenne tady jen aby se vypisovaly
+int g_front_sensor;//promenne tady jen aby se vypisovaly
 int g_left_sensor=100;//hodnota z leveho senzoru
 	int a1=0,
 	a2=0,
@@ -331,6 +331,11 @@ void buttons(){
 			forward1(100);
 
 		bear_search(20);
+		if(bear ==false){
+
+
+
+		}
 		if(bear==true){
 			forward1(110);
 			turn_left(90,40);
