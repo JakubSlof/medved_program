@@ -9,7 +9,7 @@
 
 const float wheel_diameter = 70; // prumer kola
 const float wheel_base = 148;	 // rozvor kol
-const float speed = 50;			 // rychlost jizdy
+const float speed = 60;			 // rychlost jizdy
 short average_left;				 // konstanata pro plovouci prumer
 int g_encoder;					 // promenne tady jen aby se vypisovaly
 int g_front_sensor;				 // promenne tady jen aby se vypisovaly
@@ -35,9 +35,11 @@ typedef enum
 	WALL4,
 	ESKO_BACK,
 	HOME1,
-	HOME2
+	HOME2,
+	ROHY,
+	HRISTE
 } sectors;
-sectors state = ESKO;
+sectors state = ROHY;
 
 void obloukright(short radius, float angle_oblouku)
 { // polomer oblouku pro vnejsi kolo
@@ -83,7 +85,14 @@ void close_klepeto()
 	setMotorSpeed(L_klepeto, -20);
 	delay(100);
 }
-
+void open_klepeto1()
+{ // o kolik stupnu se zavre prave klepeto a o kolik leve
+	resetMotorEncoder(R_klepeto);
+	resetMotorEncoder(L_klepeto);
+	setMotorSpeed(R_klepeto, 50); // leve klepeto se zavira jako prvni aby se nenabouraly
+	setMotorSpeed(L_klepeto, 50);
+	delay(280);//250 funguje
+}
 // otoceni robota doprava
 void turn_right(short turnindeg, short speed)
 {
@@ -113,7 +122,7 @@ void forward1(short lenght)
 { // delka co ma robot ujet v mm
 	resetMotorEncoder(L_motor);
 	resetMotorEncoder(R_motor);
-	moveMotorTarget(L_motor, lenght * 360 / (PI * wheel_diameter), speed);
+	moveMotorTarget(L_motor, lenght * 360 / (PI * wheel_diameter), speed+2);
 	moveMotorTarget(R_motor, lenght * 360 / (PI * wheel_diameter), speed);
 	waitUntilMotorStop(L_motor);
 	waitUntilMotorStop(R_motor);
@@ -194,8 +203,48 @@ void field_search()
 	setMotorSpeed(L_motor, 0);
 }
 
+
+
+void floating_average1(short lenght)
+{
+resetMotorEncoder(L_motor);
+resetMotorEncoder(R_motor);
+g_encoder = 0;
+
+	int j = 0;
+	int distance[6];
+	int distance_sum;
+
+	for (int i = 0; i < 6; i++)
+	{ // pocatecni zaplneni pole hodnotami ze senzoru
+		distance[i] = getUSDistance(S2);
+		delay(20);
+	}
+	do
+	{
+ g_encoder = getMotorEncoder(L_motor);
+		distance[j] = getUSDistance(S2);
+		distance_sum = 0;
+		for (int i = 0; i < 6; i++)
+		{
+			distance_sum += distance[i];
+		}
+		j++;
+		g_left_sensor = distance_sum / 6;
+		if (j > 5)
+		{
+			j = 0;
+		}
+		delay(100);
+	} while ((g_left_sensor>110 && g_left_sensor<255)&& g_encoder <= (lenght * 360 / (PI * wheel_diameter) );
+setMotorSpeed(R_motor, 0);
+setMotorSpeed(L_motor, 0);
+	}
+
+
 void floating_average()
 {
+
 	int j = 0;
 	int distance[6];
 	int distance_sum;
@@ -235,7 +284,7 @@ void bear_search(short measuring_speed, short lenght)
 	setMotorSpeed(L_motor, measuring_speed);
 	resetMotorEncoder(L_motor);
 	resetMotorEncoder(R_motor);
-	while (g_left_sensor >= 90 && g_encoder <= (lenght * 360 / (PI * wheel_diameter)))
+	while (g_left_sensor >= 90 )
 	{
 		g_encoder = getMotorEncoder(R_motor);
 		a1 = getUSDistance(S2);
@@ -258,7 +307,7 @@ void bear_search(short measuring_speed, short lenght)
 		state = HOME1;
 		break;
 	}
-	if ( g_encoder = (lenght * 360 / (PI * wheel_diameter))) // nikdy nesmi byt true
+	if ( g_encoder == (lenght * 360 / (PI * wheel_diameter))) // nikdy nesmi byt true
 	{
 		state = WALL1;
 		break;
@@ -297,16 +346,16 @@ void front_measuring()
 	delay(1);
 	g_front_sensor = ((a1 + a2 + a3 + a4 + a5) / 5);
 	while(true){
-	if (g_front_sensor>10)
+	if (g_front_sensor<10)
 	{
 		state = HOME2;
 		break;
 	}
-	//else
-	//{
-	//	state = FIELD2;
-	//	break;
-	//}
+	else
+	{
+		state = FIELD2;
+		break;
+	}
 }
 }
 
@@ -316,73 +365,103 @@ void buttons()
 	while (true)
 	{
 		if (getButtonPress(buttonUp))
-		{ // pokud se zmackne tlacitko nahoru zacne robot hledat v pasu jedna
+		{
 			button_back();
 			forward1(600);
 			obloukleft(300, 180);
 			forward1(50);
-			obloukright(430, 164);
+			obloukright(420, 170);
 			open_klepeto(90, 90);
-			setMotorSpeed(R_motor, speed - 2);
-			setMotorSpeed(L_motor, speed);
-			floating_average(); // hleda konec zdi
+			forward1(1600);
+			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(L_motor, 50);
+			delay(1500);
 			setMotorSpeed(R_motor, 0);
 			setMotorSpeed(L_motor, 0);
-			forward1(100);
-
-			bear_search(20, 1000);
-			if (bear == false)
-			{
-				front_measuring();
-				if (bear = true)
-				{
-					go_for_bear(200);
-					button_back();
+			close_klepeto();
+			backward1(140);
+			obloukright(200, 120);
+			button_back();
+			open_klepeto1();
+			setMotorSpeed(R_klepeto, 0);
+			setMotorSpeed(L_klepeto, 0);
+			forward1(1050);
+			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(L_motor, 50);
+			delay(500);
+			setMotorSpeed(R_motor, 0);
+			setMotorSpeed(L_motor, 0);
+			close_klepeto();
+			backward1(140);
+			obloukright(200, 120);
+			button_back();
+			open_klepeto1();
+			setMotorSpeed(R_klepeto, 0);
+			setMotorSpeed(L_klepeto, 0);
+			forward1(1050);
+			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(L_motor, 50);
+			delay(500);
+			setMotorSpeed(R_motor, 0);
+			setMotorSpeed(L_motor, 0);
+			close_klepeto();
+			backward1(140);
+			obloukright(200, 120);
+			button_back();
+			open_klepeto1();
+			setMotorSpeed(R_klepeto, 0);
+			setMotorSpeed(L_klepeto, 0);
+			forward1(1050);
+			close_klepeto();
+			turn_left(100,40);
+			button_back();
 					forward1(100);
 					turn_left(100, 40);
 					button_back();
+					forward1(400);
+					obloukleft(300, 100);
+					forward1(400);
+					obloukright(300, 180);
 					forward1(500);
-					obloukleft(300, 4);
-					forward1(100);
-					obloukright(300, 2);
-					forward1(500);
-				}
-				if (bear = false)
-				{
-					forward1(100);
-					obloukright(200, 90); // right znamena doleva
-					button_back();
-				}
-			}
-			if (bear == true)
-			{
-				forward1(110);
-				turn_left(90, 40);
-				button_back();
-				go_for_bear(1200);
-				close_klepeto();
-				button_back();
-				turn_right(110, 40);
-				button_back();
-
-				forward1(100);
-				turn_left(100, 40);
-				button_back();
-				forward1(500);
-				obloukleft(300, 4);
-				forward1(100);
-				obloukright(300, 2);
-				forward1(500);
-			}
 		}
-
 		if (getButtonPress(buttonRight))
 		{
-			delay(1);
-		}
+				button_back();
+					forward1(600);
+					obloukleft(300, 180);
+					forward1(50);
+					obloukright(430, 170);
+					open_klepeto(90, 90);
+					setMotorSpeed(R_motor, speed - 2);
+					setMotorSpeed(L_motor, speed);
+					floating_average(); // hleda konec zdi
+					setMotorSpeed(R_motor, 0);
+					setMotorSpeed(L_motor, 0);
+					forward1(100);
+					setMotorSpeed(R_motor, 13);
+					setMotorSpeed(L_motor, 15);
+					floating_average1(900);
+					forward1(100);
+					turn_left(90,40);
+					button_back();
+					go_for_bear(1200);
+					close_klepeto();
+					button_back();
+					turn_right(100,40);
+			button_back();
+					forward1(100);
+					turn_left(100, 40);
+					button_back();
+					forward1(400);
+					obloukleft(300, 100);
+					forward1(400);
+					obloukright(300, 180);
+					forward1(500);
 
-		if (getButtonPress(buttonDown))
-		{
+
+
+
+
 		}
 
 		if (getButtonPress(buttonLeft))
@@ -468,6 +547,80 @@ void buttons()
 					forward1(400);
 					obloukleft(300, 100);
 					forward1(300);
+					obloukright(300, 180);
+					forward1(500);
+					break;
+					case HRISTE:
+						button_back();
+					forward1(600);
+					obloukleft(300, 180);
+					forward1(50);
+					obloukright(430, 164);
+					open_klepeto(90, 90);
+					setMotorSpeed(R_motor, speed - 2);
+					setMotorSpeed(L_motor, speed);
+					floating_average(); // hleda konec zdi
+					setMotorSpeed(R_motor, 0);
+					setMotorSpeed(L_motor, 0);
+					forward1(100);
+					break;
+
+					case ROHY:
+			button_back();
+			forward1(600);
+			obloukleft(300, 180);
+			forward1(50);
+			obloukright(420, 170);
+			open_klepeto(90, 90);
+			forward1(1600);
+			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(L_motor, 50);
+			delay(1500);
+			setMotorSpeed(R_motor, 0);
+			setMotorSpeed(L_motor, 0);
+			close_klepeto();
+			backward1(140);
+			obloukright(200, 120);
+			button_back();
+			open_klepeto1();
+			setMotorSpeed(R_klepeto, 0);
+			setMotorSpeed(L_klepeto, 0);
+			forward1(1050);
+			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(L_motor, 50);
+			delay(500);
+			setMotorSpeed(R_motor, 0);
+			setMotorSpeed(L_motor, 0);
+			close_klepeto();
+			backward1(140);
+			obloukright(200, 120);
+			button_back();
+			open_klepeto1();
+			setMotorSpeed(R_klepeto, 0);
+			setMotorSpeed(L_klepeto, 0);
+			forward1(1050);
+			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(L_motor, 50);
+			delay(500);
+			setMotorSpeed(R_motor, 0);
+			setMotorSpeed(L_motor, 0);
+			close_klepeto();
+			backward1(140);
+			obloukright(200, 120);
+			button_back();
+			open_klepeto1();
+			setMotorSpeed(R_klepeto, 0);
+			setMotorSpeed(L_klepeto, 0);
+			forward1(1050);
+			close_klepeto();
+			turn_left(100,40);
+			button_back();
+					forward1(100);
+					turn_left(100, 40);
+					button_back();
+					forward1(400);
+					obloukleft(300, 100);
+					forward1(400);
 					obloukright(300, 180);
 					forward1(500);
 					break;
