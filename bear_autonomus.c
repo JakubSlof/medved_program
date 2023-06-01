@@ -19,7 +19,6 @@ int a1 = 0,
 	a3 = 0,
 	a4 = 0,
 	a5 = 0;
-bool bear = false;
 float distance_avg = 0;
 
 typedef enum
@@ -438,7 +437,7 @@ void buttons()
 					setMotorSpeed(R_motor, 0);
 					setMotorSpeed(L_motor, 0);
 					forward1(100);
-					setMotorSpeed(R_motor, 13);
+					setMotorSpeed(R_motor, 14);
 					setMotorSpeed(L_motor, 15);
 					floating_average1(900);
 					forward1(100);
@@ -465,21 +464,48 @@ void buttons()
 		}
 
 		if (getButtonPress(buttonLeft))
-		{ // pokud se zmackne tlacitko nahoru zacne robot hledat medveda v pasu tri
-			while (true)
-			{
-				a1 = getUSDistance(S2);
-				delay(1);
-				a2 = getUSDistance(S2);
-				delay(1);
-				a3 = getUSDistance(S2);
-				delay(1);
-				a4 = getUSDistance(S2);
-				delay(1);
-				a5 = getUSDistance(S2);
-				delay(1);
-				g_left_sensor = ((a1 + a2 + a3 + a4 + a5) / 5);
-			}
+		{
+			button_back();
+			forward1(600);
+			obloukleft(300, 180);
+			forward1(50);
+			obloukright(420, 170);
+			open_klepeto(90, 90);
+			forward1(1600);
+			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(L_motor, 50);
+			delay(1500);
+			setMotorSpeed(R_motor, 0);
+			setMotorSpeed(L_motor, 0);
+			close_klepeto();
+			backward1(140);
+			obloukright(200, 120);
+			button_back();
+			open_klepeto1();
+			setMotorSpeed(R_klepeto, 0);
+			setMotorSpeed(L_klepeto, 0);
+			forward1(1050);
+			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(L_motor, 50);
+			delay(500);
+			setMotorSpeed(R_motor, 0);
+			setMotorSpeed(L_motor, 0);
+			close_klepeto();
+			backward1(140);
+			obloukright(200, 120);
+			button_back();
+			forward1(100);
+			setMotorSpeed(R_motor, 14);
+					setMotorSpeed(L_motor, 15);
+					floating_average1(900);
+					forward1(100);
+					turn_left(90,40);
+					open_klepeto(90,90);
+					button_back();
+					go_for_bear(1200);
+					close_klepeto();
+					button_back();
+
 		}
 
 		if (getButtonPress(buttonEnter))
