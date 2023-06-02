@@ -505,6 +505,23 @@ void buttons()
 					go_for_bear(1200);
 					close_klepeto();
 					button_back();
+					forward1(500);
+					turn_left(190,190);
+					button_back();
+					turn_right(100,40);
+					button_back();
+					forward1(100);
+					turn_left(100, 40);
+					button_back();
+					forward1(400);
+					obloukleft(300, 100);
+					forward1(400);
+					obloukright(300, 180);
+					forward1(500);
+
+
+
+
 
 		}
 
