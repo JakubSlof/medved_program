@@ -372,7 +372,7 @@ void buttons()
 			obloukright(400, 170);
 			open_klepeto(90, 90);
 			forward1(1600);
-			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(R_motor, 49);
 			setMotorSpeed(L_motor, 50);
 			delay(1500);
 			setMotorSpeed(R_motor, 0);
@@ -385,7 +385,7 @@ void buttons()
 			setMotorSpeed(R_klepeto, 0);
 			setMotorSpeed(L_klepeto, 0);
 			forward1(1050);
-			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(R_motor, 49);
 			setMotorSpeed(L_motor, 50);
 			delay(500);
 			setMotorSpeed(R_motor, 0);
@@ -398,7 +398,7 @@ void buttons()
 			setMotorSpeed(R_klepeto, 0);
 			setMotorSpeed(L_klepeto, 0);
 			forward1(1050);
-			setMotorSpeed(R_motor, 48);
+			setMotorSpeed(R_motor, 49);
 			setMotorSpeed(L_motor, 50);
 			delay(500);
 			setMotorSpeed(R_motor, 0);
@@ -418,10 +418,10 @@ void buttons()
 					turn_left(100, 40);
 					button_back();
 					forward1(400);
-					obloukleft(300, 100);
+					obloukleft(300, 120);
 					forward1(400);
-					obloukright(280, 180);
-					forward1(500);
+					obloukright(210, 190);
+					forward1(50000);
 		}
 		if (getButtonPress(buttonRight))
 		{
@@ -452,10 +452,10 @@ void buttons()
 					turn_left(110, 40);
 					button_back();
 					forward1(400);
-					obloukleft(300, 100);
+						obloukleft(300, 120);
 					forward1(400);
-					obloukright(250, 180);
-					forward1(500);
+					obloukright(210, 190);
+					forward1(50000);
 
 
 
@@ -479,7 +479,7 @@ void buttons()
 			setMotorSpeed(L_motor, 0);
 			close_klepeto();
 			backward1(140);
-			obloukright(200, 120);
+			obloukright(200, 115);
 			button_back();
 			open_klepeto1();
 			setMotorSpeed(R_klepeto, 0);
@@ -494,11 +494,11 @@ void buttons()
 			backward1(140);
 			obloukright(200, 120);
 			button_back();
-			forward1(100);
+			forward1(150);
 			setMotorSpeed(R_motor, 14);
 					setMotorSpeed(L_motor, 15);
-					floating_average1(900);
-					forward1(100);
+					floating_average1(850);
+					forward1(160);
 					turn_left(90,40);
 					open_klepeto(90,90);
 					button_back();
@@ -506,18 +506,18 @@ void buttons()
 					close_klepeto();
 					button_back();
 					forward1(500);
-					turn_left(190,190);
+					turn_left(200,200);
 					button_back();
-					turn_right(100,40);
+					turn_right(110,40);
 					button_back();
 					forward1(100);
 					turn_left(100, 40);
 					button_back();
 					forward1(400);
-					obloukleft(300, 100);
+							obloukleft(300, 120);
 					forward1(400);
-					obloukright(280, 180);
-					forward1(500);
+					obloukright(210, 190);
+					forward1(50000);
 
 
 
