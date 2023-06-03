@@ -235,7 +235,7 @@ g_encoder = 0;
 			j = 0;
 		}
 		delay(100);
-	} while ((g_left_sensor>110 && g_left_sensor<255)&& g_encoder <= (lenght * 360 / (PI * wheel_diameter) );
+	} while ((g_left_sensor>100 && g_left_sensor<255)&& g_encoder <= (lenght * 360 / (PI * wheel_diameter) );
 setMotorSpeed(R_motor, 0);
 setMotorSpeed(L_motor, 0);
 	}
@@ -368,8 +368,8 @@ void buttons()
 			button_back();
 			forward1(600);
 			obloukleft(300, 180);
-			forward1(50);
-			obloukright(420, 170);
+			forward1(100);
+			obloukright(400, 170);
 			open_klepeto(90, 90);
 			forward1(1600);
 			setMotorSpeed(R_motor, 48);
@@ -420,7 +420,7 @@ void buttons()
 					forward1(400);
 					obloukleft(300, 100);
 					forward1(400);
-					obloukright(300, 180);
+					obloukright(280, 180);
 					forward1(500);
 		}
 		if (getButtonPress(buttonRight))
@@ -428,8 +428,8 @@ void buttons()
 				button_back();
 					forward1(600);
 					obloukleft(300, 180);
-					forward1(50);
-					obloukright(430, 170);
+						forward1(100);
+			obloukright(400, 170);
 					open_klepeto(90, 90);
 					setMotorSpeed(R_motor, speed - 2);
 					setMotorSpeed(L_motor, speed);
@@ -446,15 +446,15 @@ void buttons()
 					go_for_bear(1200);
 					close_klepeto();
 					button_back();
-					turn_right(100,40);
+					turn_right(120,40);
 			button_back();
 					forward1(100);
-					turn_left(100, 40);
+					turn_left(110, 40);
 					button_back();
 					forward1(400);
 					obloukleft(300, 100);
 					forward1(400);
-					obloukright(300, 180);
+					obloukright(250, 180);
 					forward1(500);
 
 
@@ -468,8 +468,8 @@ void buttons()
 			button_back();
 			forward1(600);
 			obloukleft(300, 180);
-			forward1(50);
-			obloukright(420, 170);
+			forward1(100);
+			obloukright(400, 170);
 			open_klepeto(90, 90);
 			forward1(1600);
 			setMotorSpeed(R_motor, 48);
@@ -516,7 +516,7 @@ void buttons()
 					forward1(400);
 					obloukleft(300, 100);
 					forward1(400);
-					obloukright(300, 180);
+					obloukright(280, 180);
 					forward1(500);
 
 
@@ -664,7 +664,7 @@ void buttons()
 					forward1(400);
 					obloukleft(300, 100);
 					forward1(400);
-					obloukright(300, 180);
+					obloukright(280, 180);
 					forward1(500);
 					break;
 				}

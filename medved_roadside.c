@@ -90,13 +90,26 @@ while(true){
 		if(getButtonPress(buttonUp)){ //pokud se zmackne tlacitko nahoru zacne robot hledat v pasu jedna
 			startTask(detection);
 		back_button();
-go_forward(500);
+go_forward(450);
 turn_right(100,20);
-go_forward(1000);
+go_forward(1200);
 backward(100);
 turn_right(190,20);
-go_forward(890);
+go_forward(1050);
 turn_left(90,20);
+go_forward(400);
+
+		}
+if(getButtonPress(buttonDown)){ //pokud se zmackne tlacitko nahoru zacne robot hledat v pasu jedna
+			startTask(detection);
+		back_button();
+go_forward(450);
+turn_left(100,20);
+go_forward(1200);
+backward(100);
+turn_left(190,20);
+go_forward(1050);
+turn_right(90,20);
 go_forward(400);
 
 		}
@@ -105,5 +118,3 @@ go_forward(400);
 ///////////////////////
 
 		}
-
-
