@@ -152,58 +152,6 @@ void button_back()
 	setMotorSpeed(L_motor, 0);
 }
 
-// hledani medveda bocnim senzorem
-void field_search()
-{
-	setMotorSpeed(R_motor, speed);
-	setMotorSpeed(L_motor, speed);
-	short a1 = 0,
-		  a2 = 0,
-		  a3 = 0,
-		  a4 = 0,
-		  a5 = 0,
-		  a6 = 0,
-		  a7 = 0,
-		  a8 = 0,
-		  a9 = 0,
-		  a10 = 0;
-	for (int a = 0; a == 9; a++)
-	{
-		a1 = getUSDistance(S2);
-		a2 = a1;
-		a3 = a2;
-		a4 = a3;
-		a5 = a4;
-		a6 = a5;
-		a7 = a6;
-		a8 = a7;
-		a9 = a8;
-		a10 = a9;
-		delay(60);
-	}
-	do
-	{
-		a1 = getUSDistance(S2);
-		a2 = a1;
-		a3 = a2;
-		a4 = a3;
-		a5 = a4;
-		a6 = a5;
-		a7 = a6;
-		a8 = a7;
-		a9 = a8;
-		a10 = a9;
-		average_left = (a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10) / 10;
-
-		delay(60);
-	} while (average_left > 100 && average_left < 120);
-
-	setMotorSpeed(R_motor, 0);
-	setMotorSpeed(L_motor, 0);
-}
-
-
-
 void floating_average1(short lenght)
 {
 resetMotorEncoder(L_motor);
@@ -498,7 +446,7 @@ void buttons()
 			setMotorSpeed(R_motor, 14);
 					setMotorSpeed(L_motor, 15);
 					floating_average1(850);
-					forward1(160);
+					forward1(100);
 					turn_left(90,40);
 					open_klepeto(90,90);
 					button_back();
